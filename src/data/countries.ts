@@ -8,11 +8,11 @@ export class Countries {
         this.asyncConstructor();
     }
 
-    async asyncConstructor () {
+    async asyncConstructor (): Promise<void> {
         await this.fetchCountries();
     }
 
-    async fetchCountries () {
+    async fetchCountries (): Promise<void> {
         try {
             const response = await fetch('../../public/data.json');
             const data: CountryData[] = await response.json();
@@ -22,7 +22,7 @@ export class Countries {
         }
     }
 
-    randomizeCountriesData (countries: CountryData[]) {
+    randomizeCountriesData (countries: CountryData[]): CountryData[] {
         return countries.sort(() => Math.random() - 0.5);
     }
 }
