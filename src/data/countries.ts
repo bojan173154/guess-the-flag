@@ -1,15 +1,12 @@
 import type { CountryData } from './interfaces';
 
-export class Countries {
-    countries: CountryData[];
+class Countries {
+    private countries: CountryData[];
+    private selectedCountry: CountryData;
 
     constructor () {
         this.countries = [];
-        this.asyncConstructor();
-    }
-
-    async asyncConstructor (): Promise<void> {
-        await this.fetchCountries();
+        this.selectedCountry = this.countries[0];
     }
 
     async fetchCountries (): Promise<void> {
@@ -25,4 +22,17 @@ export class Countries {
     randomizeCountriesData (countries: CountryData[]): CountryData[] {
         return countries.sort(() => Math.random() - 0.5);
     }
+
+    getCountries (): CountryData[] {
+        return this.countries;
+    }
+
+    setSelectCountry (country: CountryData): void {
+        this.selectedCountry = country;
+    }
+    getSelectedCountry (): CountryData {
+        return this.selectedCountry;
+    }
 }
+
+export const countriesData = new Countries();
