@@ -20,7 +20,6 @@ module.exports = {
         'no-use-before-define': 'error',
         'no-undef': 'error',
         'indent': ['error', 4],
-        'linebreak-style': ['error', 'unix'],
         'quotes': ['error', 'single', { 'avoidEscape': true }],
         'semi': ['error', 'always'],
         'no-var': 'error',
