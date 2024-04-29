@@ -54,7 +54,7 @@ const handleStartPlaying = () => {
 
 watch(() => guess.value, () => {
     if (guess.value === props.selectedCountry.country.toLowerCase()) {
-        score.value += score.value + 1;
+        score.value += 1;
         guess.value = '';
         emit('handleCorrectGuess', props.selectedCountry);
     }
