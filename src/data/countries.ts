@@ -1,6 +1,6 @@
 import type { CountryData } from './interfaces';
 
-export class CountryCollection {
+export class Countries {
     countries: CountryData[];
 
     constructor () {
@@ -16,13 +16,13 @@ export class CountryCollection {
         try {
             const response = await fetch('../../public/data.json');
             const data: CountryData[] = await response.json();
-            this.countries = this.randomizeCountryData(data);
+            this.countries = this.randomizeCountriesData(data);
         } catch (e) {
             console.error(e);
         }
     }
 
-    randomizeCountryData (countries: CountryData[]) {
+    randomizeCountriesData (countries: CountryData[]) {
         return countries.sort(() => Math.random() - 0.5);
     }
 }

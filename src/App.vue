@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { CountryCollection } from './data/countryCollection';
+import { Countries } from './data/countries';
 
-const countries = new CountryCollection();
+const countries = new Countries();
 console.log(countries);
 </script>
 
 <template>
     Hello
 </template>
+./data/countries
