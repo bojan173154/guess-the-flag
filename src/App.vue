@@ -5,7 +5,9 @@ import { deepEqual } from './services/utility';
 
 import { countriesData } from './data/countries';
 import type { CountryData } from './data/interfaces';
+
 import CountryBlock from './components/CountryBlock.vue';
+import QuizHeader from './components/QuizHeader.vue';
 
 const allCountries = ref<CountryData[]>([]);
 const selectedCountry = ref<CountryData>(allCountries.value[0]);
@@ -24,6 +26,8 @@ const handleCardClick = (country: CountryData): void => {
 </script>
 
 <template>
+    <quiz-header :selected-country="selectedCountry" />
+
     <div id="container">
         <div class="row">
             <country-block
@@ -37,36 +41,36 @@ const handleCardClick = (country: CountryData): void => {
     </div>
 </template>
 
-  <style scoped>
-  .container {
+<style scoped>
+.container {
     display: flex;
     flex-wrap: wrap;
     max-width: 100%;
     overflow-x: auto;
-  }
+}
 
-  .row {
+.row {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-  }
+}
 
-  .card {
+.card {
     flex: 1 0 calc(20% - 20px);
     padding: 10px;
     border: 1px solid #ccc;
     box-sizing: border-box;
-  }
+}
 
-  @media (max-width: 1200px) {
+@media (max-width: 1200px) {
     .card {
-      flex: 1 0 calc(33.33% - 20px); /* 3 cards per row on medium screens */
+        flex: 1 0 calc(33.33% - 20px);
     }
-  }
+}
 
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
     .card {
-      flex: 1 0 calc(100% - 20px); /* 1 card per row on small screens */
+        flex: 1 0 calc(100% - 20px);
     }
-  }
-  </style>
+}
+</style>

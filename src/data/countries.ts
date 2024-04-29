@@ -11,7 +11,7 @@ class Countries {
 
     async fetchCountries (): Promise<void> {
         try {
-            const response = await fetch('../../public/data.json');
+            const response = await fetch('../../data.json');
             const data: CountryData[] = await response.json();
             this.countries = this.randomizeCountriesData(data);
         } catch (e) {

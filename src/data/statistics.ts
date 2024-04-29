@@ -14,6 +14,10 @@ class Statistics {
     getIsQuizPlaying (): boolean {
         return this.isQuizPlaying;
     }
+
+    startPlaying (): void {
+        this.isQuizPlaying = true;
+    }
 }
 
 export const statistics = new Statistics();
