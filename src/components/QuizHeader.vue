@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, defineAsyncComponent, watch } from 'vue';
 import type { CountryData } from '../data/interfaces';
-import { statistics } from '../data/statistics';
 
 const CountryBlock = defineAsyncComponent(() =>
     import('./CountryBlock.vue')
@@ -13,8 +12,9 @@ const LeftArrow = defineAsyncComponent(() =>
     import('./LeftArrow.vue')
 );
 
-withDefaults(defineProps<{
-    selectedCountry: CountryData;
+const props = withDefaults(defineProps<{
+    selectedCountry?: CountryData;
+    totalNumberOfCountries: number;
 }>(), {
     selectedCountry: () => ({
         flag: '',
@@ -24,12 +24,41 @@ withDefaults(defineProps<{
     })
 });
 
-const isQuizPlaying = ref<boolean>(statistics.getIsQuizPlaying());
+const emit = defineEmits<{
+    handleArrowClick: ['right' | 'left'],
+    handleCorrectGuess: [CountryData],
+    timeFinish: [void]
+}>();
+
+const isQuizPlaying = ref<boolean>(false);
+const score = ref<number>(0);
+const guess = ref<string>('');
+const remainingTimeInSeconds = ref<number>(0);
+const remainingTimeInMinutes = ref<number>(20);
+
+const timer = setInterval(() => {
+    if (remainingTimeInSeconds.value && remainingTimeInMinutes) {
+        remainingTimeInSeconds.value--;
+    } else if (!remainingTimeInSeconds.value && remainingTimeInMinutes) {
+        remainingTimeInMinutes.value--;
+        remainingTimeInSeconds.value = 59;
+    } else if (!remainingTimeInMinutes.value) {
+        clearInterval(timer);
+        emit('timeFinish');
+    }
+}, 1000);
 
 const handleStartPlaying = () => {
-    statistics.startPlaying();
-    isQuizPlaying.value = statistics.getIsQuizPlaying();
+    isQuizPlaying.value = true;
 };
+
+watch(() => guess.value, () => {
+    if (guess.value === props.selectedCountry.country.toLowerCase()) {
+        score.value += score.value + 1;
+        guess.value = '';
+        emit('handleCorrectGuess', props.selectedCountry);
+    }
+});
 </script>
 
 <template>
@@ -44,11 +73,25 @@ const handleStartPlaying = () => {
             <country-block :country="selectedCountry" :is-selected="false"/>
 
             <div id="control-field">
-                <left-arrow />
+                <left-arrow  @click="emit('handleArrowClick', 'left')"/>
+                <input v-model="guess" type="text">
+                <right-arrow @click="emit('handleArrowClick', 'right')" />
+            </div>
 
-                <input type="text">
+            <div id="score">
+                <span>
+                    {{ score }}
+                </span>
+                <span>
+                    /
+                </span>
+                <span>
+                    {{ totalNumberOfCountries }}
+                </span>
+            </div>
 
-                <right-arrow />
+            <div id="timer">
+                {{ remainingTimeInMinutes }} : {{ remainingTimeInSeconds }}
             </div>
         </div>
     </div>
@@ -59,7 +102,6 @@ const handleStartPlaying = () => {
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: center;
     margin: 50px;
 }
 
@@ -84,11 +126,21 @@ const handleStartPlaying = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 200px;
 }
 
 #control-field {
     display: flex;
     gap: 5px;
+}
+
+#score {
+    display: flex;
+    gap: 10px;
+    font-size: xxx-large;
+}
+
+#timer {
+    font-size: xxx-large;
 }
 </style>

@@ -5,5 +5,6 @@
 <style scoped>
 svg {
     margin: 10px;
+    cursor: pointer;
 }
 </style>

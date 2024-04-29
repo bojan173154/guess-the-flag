@@ -8,13 +8,21 @@ const props = defineProps<{
 const emit = defineEmits<{
     handleCardClick: [CountryData]
 }>();
+
+const handleCardClick = () => {
+    if (props.country.showText) {
+        return;
+    }
+
+    emit('handleCardClick', props.country);
+};
 </script>
 
 <template>
     <div
         class="container-card"
-        :class="{ 'selected-background': isSelected }"
-        @click="emit('handleCardClick', props.country)"
+        :class="{ 'selected-background': isSelected, 'correct-country': country.showText }"
+        @click="handleCardClick"
     >
         <img :src="country.flag">
         <span v-if="country.showText">{{ country.country }}</span>
@@ -35,5 +43,8 @@ const emit = defineEmits<{
 .selected-background {
     background-color: #d9b99b;
     cursor: auto;
+}
+.correct-country {
+    background-color: aquamarine;
 }
 </style>

@@ -3,12 +3,13 @@ import { onBeforeMount, ref } from 'vue';
 
 import { deepEqual } from './services/utility';
 
-import { countriesData } from './data/countries';
+import { Countries } from './data/countries';
 import type { CountryData } from './data/interfaces';
 
 import CountryBlock from './components/CountryBlock.vue';
 import QuizHeader from './components/QuizHeader.vue';
 
+const countriesData = new Countries();
 const allCountries = ref<CountryData[]>([]);
 const selectedCountry = ref<CountryData>(allCountries.value[0]);
 
@@ -23,10 +24,33 @@ const handleCardClick = (country: CountryData): void => {
     countriesData.setSelectCountry(country);
     selectedCountry.value = countriesData.getSelectedCountry();
 };
+
+const handleCountryChange = (direction: 'left' | 'right') => {
+    countriesData.handleCountryChange(direction);
+    selectedCountry.value = countriesData.getSelectedCountry();
+};
+
+const handleCorrectGuess = (country: CountryData) => {
+    const correctCountry = allCountries
+        .value
+        .find(foundCountry => foundCountry.code === country.code);
+
+    if (correctCountry) {
+        correctCountry.showText = true;
+        countriesData.modifyUnguessedCountries(correctCountry);
+    }
+
+    handleCountryChange('right');
+};
 </script>
 
 <template>
-    <quiz-header :selected-country="selectedCountry" />
+    <quiz-header
+        :selected-country="selectedCountry"
+        :total-number-of-countries="countriesData.getCountries().length"
+        @handle-arrow-click="handleCountryChange"
+        @handle-correct-guess="handleCorrectGuess"
+    />
 
     <div id="container">
         <div class="row">
