@@ -1,43 +1,40 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount } from 'vue';
+
+import useCountries from './composable/useCountryData';
 
 import { deepEqual } from './services/utility';
 
-import { Countries } from './data/countries';
 import type { CountryData } from './data/interfaces';
 
 import CountryBlock from './components/CountryBlock.vue';
 import QuizHeader from './components/QuizHeader.vue';
 
-const countriesData = new Countries();
-const allCountries = ref<CountryData[]>([]);
-const selectedCountry = ref<CountryData>(allCountries.value[0]);
+const {
+    countries,
+    fetchCountries,
+    selectedCountry,
+    modifyUnguessedCountries,
+    handleCountryChange
+} = useCountries();
 
 onBeforeMount(async () => {
-    await countriesData.fetchCountries();
-    allCountries.value = countriesData.getCountries();
-    countriesData.setSelectCountry(allCountries.value[0]);
-    selectedCountry.value = countriesData.getSelectedCountry();
+    await fetchCountries();
+    selectedCountry.value = countries.value[0];
 });
 
 const handleCardClick = (country: CountryData): void => {
-    countriesData.setSelectCountry(country);
-    selectedCountry.value = countriesData.getSelectedCountry();
-};
-
-const handleCountryChange = (direction: 'left' | 'right') => {
-    countriesData.handleCountryChange(direction);
-    selectedCountry.value = countriesData.getSelectedCountry();
+    selectedCountry.value = country;
 };
 
 const handleCorrectGuess = (country: CountryData) => {
-    const correctCountry = allCountries
+    const correctCountry = countries
         .value
         .find(foundCountry => foundCountry.code === country.code);
 
     if (correctCountry) {
         correctCountry.showText = true;
-        countriesData.modifyUnguessedCountries(correctCountry);
+        modifyUnguessedCountries(correctCountry);
     }
 
     handleCountryChange('right');
@@ -47,7 +44,7 @@ const handleCorrectGuess = (country: CountryData) => {
 <template>
     <quiz-header
         :selected-country="selectedCountry"
-        :total-number-of-countries="countriesData.getCountries().length"
+        :total-number-of-countries="countries.length"
         @handle-arrow-click="handleCountryChange"
         @handle-correct-guess="handleCorrectGuess"
     />
@@ -55,7 +52,7 @@ const handleCorrectGuess = (country: CountryData) => {
     <div id="container">
         <div class="row">
             <country-block
-                v-for="country in allCountries"
+                v-for="country in countries"
                 :key="country.code"
                 :country="country"
                 :is-selected="deepEqual(country, selectedCountry)"
