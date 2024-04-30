@@ -27,7 +27,7 @@ export default () => {
             .filter(country => country.code !== countryToRemove.code);
     };
 
-    const handleCountryChange = (direction: 'left' | 'right') => {
+    const handleCountryChange = (direction: 'left' | 'right'): void => {
         const selectedCode = selectedCountry.value.code;
         const indexOfCurrentCountry = unGuessedCountries.value.findIndex(country => country.code === selectedCode);
 

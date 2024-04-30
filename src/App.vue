@@ -27,7 +27,7 @@ const handleCardClick = (country: CountryData): void => {
     selectedCountry.value = country;
 };
 
-const handleCorrectGuess = (country: CountryData) => {
+const handleCorrectGuess = (country: CountryData): void => {
     const correctCountry = countries
         .value
         .find(foundCountry => foundCountry.code === country.code);

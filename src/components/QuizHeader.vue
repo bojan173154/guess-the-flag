@@ -48,7 +48,7 @@ const timer = setInterval(() => {
     }
 }, 1000);
 
-const handleStartPlaying = () => {
+const handleStartPlaying = (): void => {
     isQuizPlaying.value = true;
 };
 

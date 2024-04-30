@@ -9,7 +9,7 @@ const emit = defineEmits<{
     handleCardClick: [CountryData]
 }>();
 
-const handleCardClick = () => {
+const handleCardClick = (): void => {
     if (props.country.showText) {
         return;
     }
